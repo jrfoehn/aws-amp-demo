@@ -1,5 +1,6 @@
 ##!/bin/bash
 CLUSTER_NAME=demo-cluster
+AWS_REGION=eu-west-1
 
 ################
 # EKS Controls #
@@ -24,6 +25,10 @@ CLUSTER_NAME=demo-cluster
 # # install Helm
 # curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 # helm version --short
+
+aws kms create-alias --alias-name alias/eksworkshop --target-key-id $(aws kms create-key --query KeyMetadata.Arn --output text)
+export MASTER_ARN=$(aws kms describe-key --key-id alias/eksworkshop --query KeyMetadata.Arn --output text)
+echo "export MASTER_ARN=${MASTER_ARN}" | tee -a ~/.bash_profile
 
 ######################
 # Launch EKS Cluster # 
